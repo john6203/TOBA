@@ -5,17 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>TOBA</title>
-        <link rel="stylesheet" href="Styles/main.css" type="text/css"/>
-
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-    </head>
-    <body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:import url="/includes/head.html" />
         
         <header>
             <img id="logo" src="Images/titan.png" alt="Titan Logo" 
@@ -26,11 +17,11 @@
         
         <nav>
             <ul class="MenuBarHorizontal">
-                 <li><a href="index.html">Home</a></li>
-                 <li><a href="login.html">Log In</a></li>
+                 <li><a href="index.jsp">Home</a></li>
+                 <li><a href="login.jsp">Log In</a></li>
                  <li><a href="new_customer.jsp">Register</a></li>
-                 <li><a href="account_activity.html">Accounts</a></li>
-                 <li><a href="transaction.html">Transactions</a></li>
+                 <li><a href="account_activity.jsp">Accounts</a></li>
+                 <li><a href="transaction.jsp">Transactions</a></li>
             </ul>    
         </nav>
         
@@ -38,7 +29,7 @@
             <h2>Register</h2>
             
             <p>Register below. If you have already registered, go to the
-               <a href="login.html">Log In</a> page.</p>
+               <a href="login.jsp">Log In</a> page.</p>
             
             <h1 style="color: red;">${message}</h1>
             
@@ -68,14 +59,20 @@
                 <label>Email:</label>
                 <input type="email" name="email"><br>
                 
+                <%--
+                     User name and password are disabled because they have 
+                     a fixed value, but ready for user input after tests.
+                --%>
+                <label>User Name:</label>
+                <input type="text" name="userName" disabled><br>
+                
+                <label>Password:</label>
+                <input type="password" name="password" disabled><br>
+                
                 <label>&nbsp;</label>
                 <input type="submit" value="Submit">
                 
             </form>
         </section>
         
-        <footer>
-            <p>&copy;2016 Titan Online Banking</p>
-        </footer>
-    </body>
-</html>
+<c:import url="/includes/footer.jsp" />

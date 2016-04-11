@@ -12,6 +12,10 @@
         <servlet-name>TransactionServlet</servlet-name>
         <servlet-class>murach.transaction.TransactionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PasswordResetServlet</servlet-name>
+        <servlet-class>murach.reset.PasswordResetServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -24,6 +28,10 @@
         <servlet-name>TransactionServlet</servlet-name>
         <url-pattern>/transaction</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PasswordResetServlet</servlet-name>
+        <url-pattern>/reset</url-pattern>
+    </servlet-mapping>    
     <error-page>
         <error-code>404</error-code>
         <location>/error_404.jsp</location>
@@ -31,7 +39,7 @@
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error_java.jsp</location>
-    </error-page>    
+    </error-page>
     <session-config>
         <session-timeout>
             30

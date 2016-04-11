@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TOBA</title>
-        <link rel="stylesheet" href="Styles/main.css" type="text/css"/>
+<%-- 
+    Document   : login
+    Created on : Apr 7, 2016, 7:37:29 AM
+    Author     : John
+--%>
 
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:import url="/includes/head.html" />
         
         <header>
             <img id="logo" src="Images/titan.png" alt="Titan Logo" 
@@ -23,11 +17,11 @@ and open the template in the editor.
         
         <nav>
             <ul class="MenuBarHorizontal">
-                 <li><a href="index.html">Home</a></li>
-                 <li><a href="login.html">Log In</a></li>
+                 <li><a href="index.jsp">Home</a></li>
+                 <li><a href="login.jsp">Log In</a></li>
                  <li><a href="new_customer.jsp">Register</a></li>
-                 <li><a href="account_activity.html">Accounts</a></li>
-                 <li><a href="transaction.html">Transactions</a></li>
+                 <li><a href="account_activity.jsp">Accounts</a></li>
+                 <li><a href="transaction.jsp">Transactions</a></li>
             </ul>    
         </nav>
         
@@ -36,6 +30,8 @@ and open the template in the editor.
             
             <p>Log in below. If you have not registered, go 
             <a href="new_customer.jsp">here</a> now!</p>
+            
+            <h1 style="color: red;">${messageNull}</h1>
             
             <form action="login" method="post">
                 
@@ -48,10 +44,8 @@ and open the template in the editor.
                 <label>&nbsp;</label>
                 <input type="submit" value="Log In">
             </form>
+            <br><br>
+            <h2><a href="password_reset.jsp">Reset Password</a></h2>
         </section>
         
-        <footer>
-            <p>&copy;2016 Titan Online Banking</p>
-        </footer>
-    </body>
-</html>
+<c:import url="/includes/footer.jsp" />
