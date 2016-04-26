@@ -33,20 +33,14 @@
             <h1 style="color: red;">${message}</h1>
             
             <form action="reset" method="post">
-                
-                <%--
-                     User name and current password are disabled because they   
-                     have a fixed value, and, also current password's type has  
-                     been changed to "text," but both will be modified correctly   
-                     and ready for user input after tests.
-                --%>
+                                
                 <label>User Name:</label>
                 <input type="text" name="userName" value="${user.userName}" 
-                       disabled><br>
+                       ><br>
                 
                 <label>Current Password:</label>
-                <input type="text" name="passwordCurrent" value="${user.password}" 
-                       disabled><br>
+                <input type="password" name="passwordCurrent" value="${user.password}" 
+                       ><br>
                 
                 <label>New Password:</label>
                 <input type="password" name="passwordNew" maxlength="25" 

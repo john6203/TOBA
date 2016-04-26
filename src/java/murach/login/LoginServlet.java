@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import murach.business.User;
+import murach.data.UserDB;
 
 /**
  *
@@ -28,33 +29,30 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();  //Get sessiion object
         
         String url;
-        HttpSession session = request.getSession();  //Get session object
-        
+                
         //Get parameters from request.
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
         
         //Verify data is correct and redirect to appropriate page.
-        User user = (User) session.getAttribute("user"); //Get user object
         
-        if (user == null) {
-            String messageNull = "You are not registered or no longer registered. " +
-                             "Please <a href=\"new_customer.jsp\">register now</a>.";
+       User user = new User();
+       user.setUserName(userName);
+       user.setPassword(password);
+        
+        if (UserDB.userNameExists(user.getUserName()) &&  
+            UserDB.passwordExists(user.getPassword()))    
+        {
+            url = "/account_activity.jsp"; //User name and password match
             
-            session.setAttribute("messageNull", messageNull); //Set message if error.
-            url = "/login.jsp"; //Set url to "login" page.
+            session.setAttribute("user", user);
         }
-        
-        else if(user.getUserName().equals(userName) && //Match the user userName property
-           user.getPassword().equals(password))   //Match the user password property
+        else 
         {
-            url = "/account_activity.jsp";
-        }
-        else
-        {
-            url = "/login_failure.jsp";
+           url = "/login_failure.jsp";
         }
         
         //Forward request and response objects to url.

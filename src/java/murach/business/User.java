@@ -10,13 +10,23 @@ package murach.business;
  * @author John
  */
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class User implements Serializable {
     
     private String firstName, lastName, phone, address, city, state, zip,
                    email, userName, password;
+    private Long userId;
+    private List<Account> accounts;
     
     public User() {
+        userId = 12345678910L;
         firstName = "";
         lastName = "";
         phone = "";
@@ -29,10 +39,10 @@ public class User implements Serializable {
         password = "";
     }
 
-    public User(String firstName, String lastName, String phone, String address, 
+    public User(Long userId, String firstName, String lastName, String phone, String address, 
                 String city, String state, String zip, String email, 
                 String userName, String password) {
-        
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -45,7 +55,17 @@ public class User implements Serializable {
         this.password = password;
         
     }
+   
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
@@ -124,5 +144,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

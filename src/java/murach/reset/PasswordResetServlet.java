@@ -5,13 +5,12 @@
  */
 package murach.reset;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
 import murach.business.User;
+import murach.data.UserDB;
 
 /**
  *
@@ -41,28 +40,48 @@ public class PasswordResetServlet extends HttpServlet {
         String url;
                 
         //Get parameter from request.
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("passwordCurrent");
         String passwordNew = request.getParameter("passwordNew");
         
+        //Store in User Object
+        User user = new User();
+        user.setUserName(userName);
+        user.setPassword(password);
+        
         //Verify new password.
-        if (passwordNew == null || passwordNew.isEmpty() || passwordNew.contains(" ")
+        if (UserDB.userNameExists(user.getUserName()) == false ||  
+            UserDB.passwordExists(user.getPassword()) == false)    
+        {
+            String message = "User name and/or current passward entered incorrectly." +
+                              " Password cannot be reset until verification of" +
+                              " user name and current password. Please try again.";
+            
+            session.setAttribute("message", message); //Set message if error.
+            url = "/password_reset.jsp"; //Set url to "new_customer" page.     
+        }
+        else if (passwordNew == null || passwordNew.isEmpty() || passwordNew.contains(" ")
             || passwordNew.length() < 8 || passwordNew.length() > 25) {
+            
             String message = "Password is not reset. Please enter a valid new" +
                               " password: cannot be blank, minimum 8 characters," +
-                              " maximum 25 characters and no spaces";
+                              " maximum 25 characters and no spaces.";
             
             session.setAttribute("message", message); //Set message if error.
             url = "/password_reset.jsp"; //Set url to "new_customer" page.            
         }
         else {
-            User user = (User) session.getAttribute("user"); //Get user object
             
-            user.setPassword(passwordNew);                  //Set to new password
+            password = passwordNew;
+            user.setPassword(password);                  //Set to new password
+            UserDB.update(user);
             
             String message = "";                           //Clear message
             session.setAttribute("message", message);      
             
             session.setAttribute("user", user);           //Add user to session
-            url = "/account_activity.jsp";                //Redlrect
+            url = "/login.jsp";                //Redlrect
+                     
         }
 
         //Forward request and response objects to url.
