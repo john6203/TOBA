@@ -26,7 +26,35 @@
         </nav>
         
         <section>
-            <h2>Transactions</h2>
+            <h2>Transactions</h2><br>
+            
+            <p>You can make transfers to and from your accounts below.</p>
+            
+            <h1 style="color: red;">${message}</h1>
+            
+            <label><b>Checking Balance:</b></label>
+            <span>${amount.checkingBalance}</span><br><br>
+            
+            <label><b>Savings Balance:</b></label>
+            <span>${amount.savingsBalance}</span><br><br><br> 
+            
+            <form action="transaction" method="post">
+                
+                <label>Transfer From:</label>
+                <input type="radio" name="transFrom" value="Checking">Checking <br>
+                <input type="radio" name="transFrom" value="Savings" checked>Savings
+                <br><br>
+                
+                <label>Transfer To:</label>
+                <input type="radio" name="transTo" value="Checking" checked>Checking<br>
+                <input type="radio" name="transTo" value="Savings">Savings
+                <br><br>
+                
+                <label>Amount:</label>
+                <input type="number" min="1" step="any" name="transAmt"><br><br>
+                
+                <label>&nbsp;</label>
+                <input type="submit" value="Transfer">
         </section>
         
 <c:import url="/includes/footer.jsp" />

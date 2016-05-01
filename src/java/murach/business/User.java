@@ -10,11 +10,19 @@ package murach.business;
  * @author John
  */
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class User implements Serializable {
     
     private String firstName, lastName, phone, address, city, state, zip,
                    email, userName, password;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long userId;
     
     public User() {
         firstName = "";
@@ -29,10 +37,10 @@ public class User implements Serializable {
         password = "";
     }
 
-    public User(String firstName, String lastName, String phone, String address, 
-                String city, String state, String zip, String email, 
-                String userName, String password) {
-        
+    public User(Long userId, String firstName, String lastName, String phone,  
+                String address, String city, String state, String zip,   
+                String email, String userName, String password) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -43,9 +51,21 @@ public class User implements Serializable {
         this.email = email;
         this.userName = userName;
         this.password = password;
-        
     }
 
+    /**
+     *
+     * @return
+     */
+    
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    
     public String getFirstName() {
         return firstName;
     }

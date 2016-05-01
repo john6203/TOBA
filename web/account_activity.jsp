@@ -36,7 +36,35 @@
             <c:if test="${sessionScope.user == null}">
                 <p>Sorry but you are not logged in. Please 
                    <a href="login.jsp">log in</a> to continue.</p>
-            </c:if>    
+            </c:if> 
+                
+            <table>
+
+               <tr>
+                  <th>Transfer ID</th> 
+                  <th>Transfer From</th>
+                  <th>Transfer To</th>
+                  <th>Transfer Amount</th>
+                  <th>Checking Balance</th>
+                  <th>Savings Balance</th>
+                  <th>Transaction Date/Time</th>
+                  
+               </tr>
+
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  <c:forEach var="transaction" items="${transactions}">
+  <tr>
+    <td>${transaction.transId}</td>
+    <td>${transaction.transFrom}</td>
+    <td>${transaction.transTo}</td>
+    <td>${transaction.transAmt}</td>
+    <td>${transaction.checkingBalance}</td>
+    <td>${transaction.savingsBalance}</td>
+    <td>${transaction.timeStamp}</td>
+  </tr>
+  </c:forEach>
+
+</table>    
         </section>
         
 <c:import url="/includes/footer.jsp" />

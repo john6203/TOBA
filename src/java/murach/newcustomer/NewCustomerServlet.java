@@ -8,7 +8,11 @@ package murach.newcustomer;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import murach.business.Account;
+
 import murach.business.User;
+import murach.data.AccountDB;
+import murach.data.UserDB;
 
 /**
  *
@@ -47,13 +51,22 @@ public class NewCustomerServlet extends HttpServlet {
         String state = request.getParameter("state");
         String zip = request.getParameter("zip");
         String email = request.getParameter("email");
-        String userName = lastName + zip; //Assigned userName for now.
-        String password = "welcome1";     //Assigned password for now.
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
         
         //Verify all fields are filled out correctly.
         //Store data in user object.
-        User user = new User(firstName, lastName, phone, address, city, 
-                            state, zip, email, userName, password);
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setCity(city);
+        user.setState(state);
+        user.setZip(zip);
+        user.setEmail(email);
+        user.setUserName(userName);
+        user.setPassword(password);
                     
             if(user.getFirstName() == null || user.getFirstName().isEmpty() ||
                user.getLastName() == null || user.getLastName().isEmpty() ||
@@ -81,6 +94,27 @@ public class NewCustomerServlet extends HttpServlet {
                 session.setAttribute("message", message); //Set message if error.
                 url = "/new_customer.jsp"; //Set url to "new_customer" page. 
             }
+            else if (UserDB.emailExists(user.getEmail())) {
+                String message = "This email address already exists.<br>" +
+                          "Please enter another email address.";
+                
+                session.setAttribute("message", message);
+                url = "/new_customer.jsp";
+            }            
+            else if (UserDB.userNameExists(user.getUserName())) {
+                String message = "This user name already exists.<br>" +
+                          "Please enter another user name.";
+                
+                session.setAttribute("message", message);
+                url = "/new_customer.jsp";
+            }
+            else if (UserDB.passwordExists(user.getPassword())) {
+                String message = "This password already exists.<br>" +
+                          "Please enter another password.";
+                
+                session.setAttribute("message", message);
+                url = "/new_customer.jsp";
+            }            
             else {
                 //Clear all messages
                 String message = "";                         
@@ -90,7 +124,14 @@ public class NewCustomerServlet extends HttpServlet {
                 session.setAttribute("messageNull", messageNull);  
                 
                 session.setAttribute("user", user); //Set user object in session.
-                url = "/success.jsp"; //Set url to "success" page.        
+                url = "/success.jsp"; //Set url to "success" page.
+                UserDB.insert(user);  //Insert into database.
+                
+                Account account = new Account(user);
+                account.setCheckingBalance(0.0);
+                account.setSavingsBalance(25.00);
+                session.setAttribute("account", account);
+                AccountDB.update(account);
             }
         
         //Forward request and response objects to url.

@@ -58,16 +58,12 @@
                 
                 <label>Email:</label>
                 <input type="email" name="email"><br>
-                
-                <%--
-                     User name and password are disabled because they have 
-                     a fixed value, but ready for user input after tests.
-                --%>
+                                
                 <label>User Name:</label>
-                <input type="text" name="userName" disabled><br>
+                <input type="text" name="userName"><br>
                 
                 <label>Password:</label>
-                <input type="password" name="password" disabled><br>
+                <input type="password" name="password"><br>
                 
                 <label>&nbsp;</label>
                 <input type="submit" value="Submit">
