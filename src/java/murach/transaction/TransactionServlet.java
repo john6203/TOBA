@@ -91,12 +91,14 @@ public class TransactionServlet extends HttpServlet {
         transItem.setSavingsBalance(transItem.getSavingsBalance());
         
         account.addTransactions(transItem);
+        
+        //Clear all messages
+        String message = "";                         
+        session.setAttribute("message", message);
+                
         session.setAttribute("account", account);
             url = "/account_activity.jsp";
             AccountDB.update(account);
-        
-        
-        
-         
+            
     }
 }
