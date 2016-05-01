@@ -6,6 +6,7 @@
 package murach.business;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import javax.persistence.OneToMany;
  *
  * @author John
  */
+
 @Entity
 public class Account implements Serializable {
     
@@ -35,7 +37,6 @@ public class Account implements Serializable {
 	
     private AccountType accountType;
     
-
     @ManyToOne	
     private User user;
 		
@@ -43,11 +44,23 @@ public class Account implements Serializable {
     private List<TransItems> transactions;
     
     public Account(User user) {
-        
         this.user = user;
+        transactions = new ArrayList<>();
         
     }
-
+        
+    public void addTransactions(TransItems item) {
+                 
+        for (int i = 0; i < transactions.size(); i++) {
+            TransItems get = transactions.get(i);
+            
+                return;
+            }
+        transactions.add(item);  
+        }
+        
+    
+    
     public double getCheckingBalance() {
         return checkingBalance;
     }
@@ -112,17 +125,7 @@ public class Account implements Serializable {
         this.accountId = accountId;
     }
 
-    public List<TransItems> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<TransItems> transactions) {
-        this.transactions = transactions;
-    }
-    
-    
-            
-}
+} 
 
 
 

@@ -6,6 +6,7 @@
 package murach.transaction;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import murach.business.Account;
 import murach.data.AccountDB;
+import murach.business.TransItems;
 
 /**
  *
  * @author John
  */
 public class TransactionServlet extends HttpServlet {
+
+    private Timestamp dateTime;
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,11 +44,11 @@ public class TransactionServlet extends HttpServlet {
         String transTo = request.getParameter("transTo");
         double transAmt = Double.parseDouble(request.getParameter("transAmt"));
         
-        //Get AccountDB
+        //Get transactions
         Account account = (Account) session.getAttribute("account");
-        
+                
         //Perform transfer
-        if("Checking".equals("transFrom") && "Savings".equals("transTo") &&
+        if("Checking".equals(transFrom) && "Savings".equals(transTo) &&
            !account.badFunds(Account.AccountType.CHECKING, account.getCheckingBalance(), 
             transAmt) ) {
             
@@ -56,23 +60,8 @@ public class TransactionServlet extends HttpServlet {
             account.credit(transAmt, Account.AccountType.SAVINGS);
             account.setSavingsBalance(account.getSavingsBalance());
             
-            String message = "";                           //Clear message
-            session.setAttribute("message", message);
-            
-            
-            session.setAttribute("account", account);   //Add user to session
-            url = "/login.jsp";                   //Redlrect
-            AccountDB.update(account);                  //Update user
-                
-        }
-        else {
-            //Error message
-            String message = "Insufficient Funds";
-            
-            session.setAttribute("message", message);
-        }
-        
-        if("Checking".equals("transTo") && "Savings".equals("transFrom") &&
+        }        
+        else if("Checking".equals(transTo) && "Savings".equals(transFrom) &&
            !account.badFunds(Account.AccountType.SAVINGS, account.getSavingsBalance(), 
             transAmt) ) {
             
@@ -83,22 +72,31 @@ public class TransactionServlet extends HttpServlet {
             //Credit savings
             account.credit(transAmt, Account.AccountType.CHECKING);
             account.setCheckingBalance(account.getCheckingBalance());
-            
-            String message = "";                           //Clear message
-            session.setAttribute("message", message);
-            
-            
-            session.setAttribute("account", account);   //Add user to session
-            url = "/login.jsp";                   //Redlrect
-            AccountDB.update(account);                  //Update user
-                
         }
         else {
             //Error message
             String message = "Insufficient Funds";
             
             session.setAttribute("message", message);
+            url = "/transaction.jsp";
         }
+        
+        TransItems transItem = new TransItems();
+        transItem.setDateTime(dateTime);
+        transItem.setTransItemsId(Long.MIN_VALUE);
+        transItem.setTransFrom(transFrom);
+        transItem.setTransTo(transTo);
+        transItem.setTransAmt(transAmt);
+        transItem.setCheckingBalance(transItem.getCheckingBalance());
+        transItem.setSavingsBalance(transItem.getSavingsBalance());
+        
+        account.addTransactions(transItem);
+        session.setAttribute("account", account);
+            url = "/account_activity.jsp";
+            AccountDB.update(account);
+        
+        
+        
          
     }
 }

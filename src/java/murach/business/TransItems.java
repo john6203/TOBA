@@ -7,20 +7,18 @@ package murach.business;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 /**
  *
  * @author John
  */
 @Entity
-class TransItems implements Serializable {
+public class TransItems implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,22 +28,24 @@ class TransItems implements Serializable {
     
     private double transAmt;
     
-    private Timestamp dateTime;
+    private Timestamp dateTime = Timestamp.valueOf(LocalDateTime.MIN);
     
     private double checkingBalance, savingsBalance;
         
-    public TransItems(Long transItemsId, String transFrom, String transTo, 
-            double transAmt, double checkingBalance, double savingsBalance, 
-            Timestamp dateTime) {
-        this.transItemsId = transItemsId;
-        this.transFrom = transFrom;
-        this.transTo = transTo;
-        this.transAmt = transAmt;
-        this.checkingBalance = checkingBalance;
-        this.savingsBalance = savingsBalance;
-        this.dateTime = dateTime;
+    public TransItems() {} //Default Constructor
+
+    public Timestamp getDateTime() {
+        return dateTime;
     }
-        
+
+    public void setTransItemsId(Long transItemsId) {
+        this.transItemsId = transItemsId;
+    }
+
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
+    }    
+                
     public Long getTransItemsId() {
         return transItemsId;
     }
@@ -89,13 +89,4 @@ class TransItems implements Serializable {
     public void setSavingsBalance(double savingsBalance) {
         this.savingsBalance = savingsBalance;
     }
-    
-   @ManyToOne
-    List<TransItems> transactions = new ArrayList<>();
-    public void Transactions(TransItems t) {
-      
-                transactions.add(t);
-      }
-         
-    }
-     
+}   
