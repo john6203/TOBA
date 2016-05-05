@@ -14,17 +14,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class User implements Serializable {
+    
+    private Timestamp registerDate = Timestamp.valueOf(LocalDateTime.MIN);
     
     private String firstName, lastName, phone, address, city, state, zip,
                    email, userName, password;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
-    
-    public User() {
+        
+    public User() {        
+         
         firstName = "";
         lastName = "";
         phone = "";
@@ -35,22 +40,6 @@ public class User implements Serializable {
         email = "";
         userName = "";
         password = "";
-    }
-
-    public User(Long userId, String firstName, String lastName, String phone,  
-                String address, String city, String state, String zip,   
-                String email, String userName, String password) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.address = address;
-        this.city = city;
-        this.state = state;
-        this.zip = zip;
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
     }
 
     /**
@@ -65,7 +54,15 @@ public class User implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    
+
+    public Timestamp getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(Timestamp registerDate) {
+        this.registerDate = registerDate;
+    }
+        
     public String getFirstName() {
         return firstName;
     }
@@ -144,5 +141,9 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRegisterDate(String date) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -54,10 +54,12 @@ public class TransactionServlet extends HttpServlet {
             
             //Debit checking            
             account.debit(transAmt, Account.AccountType.CHECKING);
+            account.setDebit(transAmt);
             account.setCheckingBalance(account.getCheckingBalance());
                         
             //Credit savings             
             account.credit(transAmt, Account.AccountType.SAVINGS);
+            account.setCredit(transAmt);
             account.setSavingsBalance(account.getSavingsBalance());
             
         }        
@@ -67,38 +69,49 @@ public class TransactionServlet extends HttpServlet {
             
             //Debit checking
             account.debit(transAmt, Account.AccountType.SAVINGS);
+            account.setDebit(transAmt);
             account.setSavingsBalance(account.getSavingsBalance());
                         
             //Credit savings
             account.credit(transAmt, Account.AccountType.CHECKING);
+            account.setCredit(transAmt);
             account.setCheckingBalance(account.getCheckingBalance());
         }
         else {
             //Error message
-            String message = "Insufficient Funds";
+            String messageFunds = "Insufficient Funds";
             
-            session.setAttribute("message", message);
+            session.setAttribute("messageFunds", messageFunds);
             url = "/transaction.jsp";
         }
         
         TransItems transItem = new TransItems();
         transItem.setDateTime(dateTime);
-        transItem.setTransItemsId(Long.MIN_VALUE);
         transItem.setTransFrom(transFrom);
         transItem.setTransTo(transTo);
         transItem.setTransAmt(transAmt);
-        transItem.setCheckingBalance(transItem.getCheckingBalance());
-        transItem.setSavingsBalance(transItem.getSavingsBalance());
+        transItem.setCredit(transAmt);
+        transItem.setDebit(transAmt);
+        transItem.setCheckingBalance(account.getCheckingBalance());
+        transItem.setSavingsBalance(account.getSavingsBalance());
         
-        account.addTransactions(transItem);
+        account.addTransaction(transItem);
+        
         
         //Clear all messages
-        String message = "";                         
-        session.setAttribute("message", message);
+        String messageFunds = "";                         
+        session.setAttribute("messageFunds", messageFunds);
                 
+        session.setAttribute("transItem", transItem);
         session.setAttribute("account", account);
             url = "/account_activity.jsp";
             AccountDB.update(account);
             
+            //Forward request and response objects to url.
+        getServletContext()
+                .getRequestDispatcher(url)
+                .forward(request, response);
+            
     }
+    
 }

@@ -41,7 +41,6 @@
             <table>
 
                <tr>
-                  <th>Transfer ID</th> 
                   <th>Transfer From</th>
                   <th>Transfer To</th>
                   <th>Transfer Amount</th>
@@ -52,15 +51,14 @@
                </tr>
 
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-  <c:forEach var="transaction" items="${transactions}">
+  <c:forEach var="item" items="${account.transactions}">
   <tr>
-    <td>${transaction.transId}</td>
-    <td>${transaction.transFrom}</td>
-    <td>${transaction.transTo}</td>
-    <td>${transaction.transAmt}</td>
-    <td>${transaction.checkingBalance}</td>
-    <td>${transaction.savingsBalance}</td>
-    <td>${transaction.timeStamp}</td>
+    <td>${item.transFrom}</td>
+    <td>${item.transTo}</td>
+    <td>${item.transferAmt}</td>
+    <td>${item.checkingBalance}</td>
+    <td>${item.savingsBalance}</td>
+    <td>${item.dateTime}</td>
   </tr>
   </c:forEach>
 

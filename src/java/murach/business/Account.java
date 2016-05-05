@@ -8,14 +8,11 @@ package murach.business;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 
 /**
@@ -28,39 +25,36 @@ public class Account implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long accountId;
-
+    private Long accountId = 0L;
+    
     public enum AccountType {CHECKING, SAVINGS;}
     
     private double checkingBalance = 0.00;
-    private double savingBalance = 0.00;
-	
-    private AccountType accountType;
+    private double savingsBalance = 0.00;
+    
+    private double credit = 0.00, debit = 0.00;
+        
+    private List<TransItems> transactions = new ArrayList<>();
     
     @ManyToOne	
     private User user;
-		
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    private List<TransItems> transactions;
-    
-    public Account(User user) {
-        this.user = user;
-        transactions = new ArrayList<>();
-        
+
+    public Account() {
     }
-        
-    public void addTransactions(TransItems item) {
+       
+    public Account(User user) {
+        this.user = user;            
+    }
+    
+    public void addTransaction(TransItems item) {
                  
         for (int i = 0; i < transactions.size(); i++) {
-            TransItems get = transactions.get(i);
-            
-                return;
+            transactions.get(i);
+                            
             }
         transactions.add(item);  
-        }
-        
-    
-    
+        }    
+                    
     public double getCheckingBalance() {
         return checkingBalance;
     }
@@ -70,11 +64,11 @@ public class Account implements Serializable {
     }
 
     public double getSavingsBalance() {
-        return savingBalance;
+        return savingsBalance;
     }
 
     public void setSavingsBalance(double savingBalance) {
-        this.savingBalance = savingBalance;
+        this.savingsBalance = savingBalance;
     }
             
        
@@ -91,7 +85,7 @@ public class Account implements Serializable {
            this.checkingBalance += credit; 
         }
         else {
-            this.savingBalance += credit;
+            this.savingsBalance += credit;
         }
      }
     
@@ -100,18 +94,10 @@ public class Account implements Serializable {
            this.checkingBalance -= debit; 
         }
         else {
-            this.savingBalance -= debit;
+            this.savingsBalance -= debit;
         }       
     }
-
-    public AccountType getType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
-            
+                
     public boolean badFunds (Account.AccountType accountType, double balance, 
                              double debit) {
         return balance < debit;
@@ -124,6 +110,32 @@ public class Account implements Serializable {
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
+
+    public double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
+    public double getDebit() {
+        return debit;
+    }
+
+    public void setDebit(double debit) {
+        this.debit = debit;
+    }
+
+    public List<TransItems> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<TransItems> transactions) {
+        this.transactions = transactions;
+    }
+    
+    
 
 } 
 

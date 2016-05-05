@@ -6,6 +6,10 @@
 package murach.newcustomer;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import murach.business.Account;
@@ -13,12 +17,16 @@ import murach.business.Account;
 import murach.business.User;
 import murach.data.AccountDB;
 import murach.data.UserDB;
+import static murach.util.PasswordUtil.hashAndSaltPassword;
+import static murach.util.PasswordUtil.validatePassword;
 
 /**
  *
  * @author John
  */
 public class NewCustomerServlet extends HttpServlet {
+
+    private Timestamp registerDate;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -37,80 +45,80 @@ public class NewCustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        //Create session
-        HttpSession session = request.getSession();  //Get session object
-        
-        String url;
-                
-        //Get parameters from request.
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String city = request.getParameter("city");
-        String state = request.getParameter("state");
-        String zip = request.getParameter("zip");
-        String email = request.getParameter("email");
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        
-        //Verify all fields are filled out correctly.
-        //Store data in user object.
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setPhone(phone);
-        user.setAddress(address);
-        user.setCity(city);
-        user.setState(state);
-        user.setZip(zip);
-        user.setEmail(email);
-        user.setUserName(userName);
-        user.setPassword(password);
-                    
+        try {
+            //Create session
+            HttpSession session = request.getSession();  //Get session object
+            
+            String url;
+            
+            //Get parameters from request.
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String city = request.getParameter("city");
+            String state = request.getParameter("state");
+            String zip = request.getParameter("zip");
+            String email = request.getParameter("email");
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
+            
+            //Verify all fields are filled out correctly.
+            //Store data in user object.
+            User user = new User();
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setPhone(phone);
+            user.setAddress(address);
+            user.setCity(city);
+            user.setState(state);
+            user.setZip(zip);
+            user.setEmail(email);
+            user.setUserName(userName);            
+            user.setPassword(hashAndSaltPassword(password));
+            user.setRegisterDate(registerDate);
+            
             if(user.getFirstName() == null || user.getFirstName().isEmpty() ||
-               user.getLastName() == null || user.getLastName().isEmpty() ||
-               user.getPhone() == null || user.getPhone().isEmpty() ||
-               user.getAddress() == null || user.getAddress().isEmpty() ||
-               user.getCity() == null || user.getCity().isEmpty() ||
-               user.getState() == null || user.getState().isEmpty() ||
-               user.getZip() == null || user.getZip().isEmpty() ||
-               user.getEmail() == null || user.getEmail().isEmpty() ||
-               user.getUserName() == null || user.getUserName().isEmpty() ||
-               user.getPassword() == null || user.getPassword().isEmpty()) {
+                    user.getLastName() == null || user.getLastName().isEmpty() ||
+                    user.getPhone() == null || user.getPhone().isEmpty() ||
+                    user.getAddress() == null || user.getAddress().isEmpty() ||
+                    user.getCity() == null || user.getCity().isEmpty() ||
+                    user.getState() == null || user.getState().isEmpty() ||
+                    user.getZip() == null || user.getZip().isEmpty() ||
+                    user.getEmail() == null || user.getEmail().isEmpty() ||
+                    user.getUserName() == null || user.getUserName().isEmpty() ||
+                    user.getPassword() == null || user.getPassword().isEmpty()) {
                 
-               String message = "Please fill out all the text boxes.";
-               
-               session.setAttribute("message", message); //Set message if error.
-               url = "/new_customer.jsp"; //Set url to "new_customer" page.            
+                String message = "Please fill out all the text boxes.";
+                
+                session.setAttribute("message", message); //Set message if error.
+                url = "/new_customer.jsp"; //Set url to "new_customer" page.            
             }
-            else if (user.getPassword().contains(" ") ||  //No white spaces
-                     user.getPassword().length() < 8 ||   //Min. 8 characters
-                     user.getPassword().length() > 25) {  //Max. 25 characters
+            else if (!validatePassword(password)) {  //Max. 25 characters
                 String message = "Please enter a valid password:" +
-                                 " minimum 8 characters, maximum 25 characters"  
-                                 + " and no spaces.";
+                        " minimum 8 characters, maximum 25 characters"
+                        + " and no spaces.";
                 
                 session.setAttribute("message", message); //Set message if error.
                 url = "/new_customer.jsp"; //Set url to "new_customer" page. 
             }
             else if (UserDB.emailExists(user.getEmail())) {
                 String message = "This email address already exists.<br>" +
-                          "Please enter another email address.";
+                        "Please enter another email address.";
                 
                 session.setAttribute("message", message);
                 url = "/new_customer.jsp";
             }            
             else if (UserDB.userNameExists(user.getUserName())) {
                 String message = "This user name already exists.<br>" +
-                          "Please enter another user name.";
+                        "Please enter another user name.";
                 
                 session.setAttribute("message", message);
                 url = "/new_customer.jsp";
             }
             else if (UserDB.passwordExists(user.getPassword())) {
                 String message = "This password already exists.<br>" +
-                          "Please enter another password.";
+                        "Please enter another password.";
                 
                 session.setAttribute("message", message);
                 url = "/new_customer.jsp";
@@ -120,7 +128,7 @@ public class NewCustomerServlet extends HttpServlet {
                 String message = "";                         
                 session.setAttribute("message", message);
                 
-                String messageNull = "";                           
+                String messageNull = "";
                 session.setAttribute("messageNull", messageNull);  
                 
                 session.setAttribute("user", user); //Set user object in session.
@@ -133,10 +141,13 @@ public class NewCustomerServlet extends HttpServlet {
                 session.setAttribute("account", account);
                 AccountDB.update(account);
             }
-        
-        //Forward request and response objects to url.
-        getServletContext()
-                .getRequestDispatcher(url)
-                .forward(request, response);
+            
+            //Forward request and response objects to url.
+            getServletContext()
+                    .getRequestDispatcher(url)
+                    .forward(request, response);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(NewCustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

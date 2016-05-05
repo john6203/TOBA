@@ -32,6 +32,9 @@
             
             <p>Here is the information you entered.</p>
             
+            <label>Date:</label>
+            <span>${user.registerDate}</span><br><br>
+            
             <label>First Name:</label>
             <span>${user.firstName}</span><br><br>
             
@@ -58,9 +61,6 @@
             
             <label>User Name:</label>
             <span>${user.userName}</span><br><br>
-            
-            <label>Password: </label>
-            <span>${user.password}</span><br><br> 
             
             <p>You can log in <a href="login.jsp">here</a> to
             start your online banking experience.</p>

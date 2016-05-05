@@ -30,13 +30,13 @@
             
             <p>You can make transfers to and from your accounts below.</p>
             
-            <h1 style="color: red;">${message}</h1>
+            <h1 style="color: red;">${messageFunds}</h1>
             
             <label><b>Checking Balance:</b></label>
-            <span>${amount.checkingBalance}</span><br><br>
+            <span>${account.checkingBalance}</span><br><br>
             
             <label><b>Savings Balance:</b></label>
-            <span>${amount.savingsBalance}</span><br><br><br> 
+            <span>${account.savingsBalance}</span><br><br><br> 
             
             <form action="transaction" method="post">
                 

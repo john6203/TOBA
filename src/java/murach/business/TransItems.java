@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -24,26 +25,52 @@ public class TransItems implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long transItemsId;
     
-    private String transFrom, transTo;
+    private String transFrom = "", transTo = "";
     
-    private double transAmt;
+    private double transferAmt = 0.00;
     
-    private Timestamp dateTime = Timestamp.valueOf(LocalDateTime.MIN);
+    private Timestamp transDate = Timestamp.valueOf(LocalDateTime.MIN);
     
-    private double checkingBalance, savingsBalance;
+    private double checkingBalance, savingsBalance, credit, debit;
+    
+    @ManyToOne       
+    private Account account;
+                
+    public TransItems() {
         
-    public TransItems() {} //Default Constructor
+        transItemsId = 0L;
+    } //Constructor
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }    
+    
+    public double getTransferAmt() {
+        return transferAmt;
+    }
+
+    public void setTransferAmt(double transferAmt) {
+        this.transferAmt = transferAmt;
+    }
+
+    public Timestamp getTransDate() {
+        return transDate;
+    }
+
+    public void setTransDate(Timestamp transDate) {
+        this.transDate = transDate;
+    }
 
     public Timestamp getDateTime() {
-        return dateTime;
+        return transDate;
     }
 
-    public void setTransItemsId(Long transItemsId) {
-        this.transItemsId = transItemsId;
-    }
-
-    public void setDateTime(Timestamp dateTime) {
-        this.dateTime = dateTime;
+    public void setDateTime(Timestamp transDate) {
+        this.transDate = transDate;
     }    
                 
     public Long getTransItemsId() {
@@ -67,11 +94,11 @@ public class TransItems implements Serializable {
     }
 
     public double getTransAmt() {
-        return transAmt;
+        return transferAmt;
     }
 
     public void setTransAmt(double transAmt) {
-        this.transAmt = transAmt;
+        this.transferAmt = transAmt;
     }
 
     public double getCheckingBalance() {
@@ -89,4 +116,23 @@ public class TransItems implements Serializable {
     public void setSavingsBalance(double savingsBalance) {
         this.savingsBalance = savingsBalance;
     }
+
+    public double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(double credit) {
+        this.credit = credit;
+    }
+
+    public double getDebit() {
+        return debit;
+    }
+
+    public void setDebit(double debit) {
+        this.debit = debit;
+    }
+    
+    
+    
 }   
